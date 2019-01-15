@@ -1,4 +1,4 @@
-# NextGEOSS User Management Integration Guide for application developers
+# NextGEOSS User Management Integration Guide
 
 ## Table of Contents
 1. [Introduction](#introduction)
