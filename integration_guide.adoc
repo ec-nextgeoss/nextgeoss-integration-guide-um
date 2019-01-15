@@ -1,0 +1,193 @@
+= Integration Guide
+
+=== General view of authentication procedures
+
+==== Authentication Flows
+In order to interact with this service, it is necessary to implement one of the three authorization flows defined by OpenID Connect 1.0 standard: implicit flow, authorization code flow and hybrid flow.
+
+* Implicit flow. This method is recommended for browser-based apps. Its main steps are:
+
+1.	A request is made to the Authorization Endpoint. The Authorization Server will redirect the user to the sign-in page.
+2.	The end-user will then authenticate with a set of required credentials.
+3.	The Authorization Server will answer back with a redirection URI and an Access Token.
+4.	The Access Token can be used to request information about the end-user via the User Info Endpoint.
+
+* Authorization Code flow. This method is recommended for apps running on a web server or native mobile applications. Its main steps are:
+
+1.	A request is made to the Authorization Endpoint. The Authorization Server service will redirect the user to the sign-in page.
+2.	The end-user will then authenticate with a set of credentials required.
+3.	The Authorization Server will answer back with an authorization code.
+4.	The Client can now use the received code to request an Access Token through the Token Endpoint.
+5.	Once the client application has acquired an Access Token, it will be possible to request information about the end-user via the User Info Endpoint.
+
+* Hybrid Code flow. This method merges characteristic from both of the previously mentioned methods. Currently, the usage of this method is not recommended with the Authorization Server.
+
+To implement any of the flows, it is necessary to specify the response type on the request to the Authorization Server. OpenID Connect specification indicates the combination of response types necessary to implement each flow:
+
+
+[#img_oidc_reponse_types,reftext='{figure-caption} {counter:figure-num}']
+.Response Types on OpenID Connect
+image::images/oidc_response_types.PNG[width=300,align="center"]
+
+==== Client authentication
+
+When accessing the Token Endpoint, clients using the implicit flow are not required to be authenticated, but if the client uses the Authorization Code Flow, it must provide its credentials.
+
+These credentials will be provided by NextGEOSS UM: client_id and client_secret.
+
+==== Request Endpoints for Authentication
+All endpoints require a set of mandatory parameters in order to generate a valid response. Their URLs can be obtained by means of a Discovery URI that answers back with a set of endpoints and their URLs. All these URLs must be accessed by means of a GET request, and require a set of mandatory parameters:
+
+*	*Discovery URI*: /.well-known/openid-configuration
+
+*	*Authorization Endpoint* (GET): /oxauth/restv1/authorize
+Parameters:
+** scope: The request should include an array of scopes, with one of them being “openid”.
+** response_type: Its value should be desired combination according to the OpenID Connect response type table.
+** client_id: Provided by NextGEOSS UM.
+** redirect_uri: It should point to the client application and match the URI given on the acceptance request.
+** state (optional): Opaque value used to maintain state between the request and the callback. Typically, Cross-Site Request Forgery (CSRF, XSRF) mitigation is done by cryptographically binding the value of this parameter with a browser cookie.
+** nonce (optional/*required for Implicit Flow*): String value used to associate a Client session with an ID Token, and to mitigate replay attacks (it can have ANY value)
+
+.Example:
+[source,url]
+GET oxauth/restv1/authorize?scope=openid&client_id=@!5C7F.E36B.5DE3.15EE!0001!6B53.87B4!0008!A121.D32B.8BCD.4E14&redirect_uri=app://test&response_type=code
+
+If the application is trying to authenticate without user input, user credentials must be provided through the Authorization header. The code will be encoded as a parameter in the Location response header.
+
+*	*Token Endpoint* (POST): /oxauth/restv1/token
+** grant_type: implicit / authorization_code (depending on the authorization flow).
+** Code*: Used only with grant_type=authorization_code
+** redirect_uri: It should point to the client application and match the URI given on the acceptance request.
+** scope: The request should include an array of scopes, with one of them being “openid”.
+** client_id*: Provided by NextGEOSS UM, only necessary with grant_type=authorization_code.
+** client_secret*: Provided by NextGEOSS UM, only necessary with grant_type=authorization_code
+
+=== Implementation on the Client side
+==== Static Registration
+
+In order to allow a client application to delegate its sign-in function under the SSO system of the Authorization Server, it is necessary to provide the following parameters:
+
+* Application Type: An application could be either NATIVE or WEB.
+footnote:[In this case it would be WEB]
+
+
+*	Policy and ToS URI: These resources contain the application policies regarding the usage of user personal information.
+footnote:[Not necessary for the purposes of this demonstration]
+
+*	Redirect Login/Logout URI: Only the first is mandatory. Indicates the URL or App Link where the sign-in service will redirect users after login.
+footnote:[The logic implemented on this webpage should retrieve the token from the URL]
+
+* Required OAuth2 Scopes: These scopes indicate which kind of information and access the Client Application is able to grant to users.
+footnote:[OpenID scope is mandatory (but its use is optional) and geoss_user is default for this system]
+
+After the application has been approved and configured, the following parameters, necessary to connect to the SSO service, will be provided to the client:
+
+*	Client ID: Unique identification sequence for your client.
+*	Client Secret: Necessary to perform Authentication on the Token Endpoint.
+
+Client credentials can be passed either as an Authorization header (encoded as Basic) or in the form of the POST request. Only one of these options can be enabled at the same time for each client.
+
+[[DynamicRegistration]]
+==== Dynamic Registration
+
+[NOTE]
+.Not available
+===============================================
+Dynamic Registration is currently not enabled but will be made available to developers in the future.
+===============================================
+
+==== Implementation Solutions for JS Clients
+For web-based clients, there are several Free and Open Source JavaScript solutions available that could implement the implicit flow. In general, all of them perform a call against the Authorization Endpoint:
+
+*	*Authorization Endpoint* (GET): /oxauth/restv1/authorize
+** scope: “openid geoss_user”.
+** response_type: “id_token token”.
+** client_id: Provided by NextGEOSS UM.
+** redirect_uri: <TBD>
+
+.Example:
+[source,url]
+GET /oxauth/restv1/authorize?scope=openid%20geoss_user&client_id=<TBD>&redirect_uri=<TBD>&response_type=id_token%20token
+
+
+==== Implementation Solutions for Clients with Back-end
+For back-end powered clients, there are several Free and Open Source solutions available that could implement the authorization code flow. In general, all of them perform a call against the Authorization Endpoint to retrieve a code and then exchange it for a token on the Token Endpoint:
+
+*	*Authorization Endpoint* (GET): /oxauth/restv1/authorize
+** scope: “openid geoss_user”.
+** response_type: “code”.
+** client_id: Provided by NextGEOSS UM.
+** redirect_uri: <TBD>
+
+.Example:
+[source,url]
+GET /oxauth/restv1/authorize?scope=openid%20geoss_user&client_id=<TBD>&redirect_uri=<TBD>&response_type=code
+
+*	*Token Endpoint* (POST): /oxauth/restv1/token
+** scope: “openid geoss_user”.
+** grant_type: authorization_code.
+** code: Obtained on the previous request.
+** client_id: Provided by NextGEOSS UM.
+** client_secret: Provided by NextGEOSS UM
+** redirect_uri: <TBD>
+
+.Example:
+[source,url]
+POST /oxauth/restv1/token -d 'scope=openid%20geoss_user&client_id=<TBD>&client_secret=<TBD>&redirect_uri=<TBD>&grant_type=authorization_code&code=<CODE>
+
+
+
+=== Implementation on the Service Side
+==== Token Validation and End-user Authorization
+
+Use this Endpoint to acquire user information:
+
+* *User-Info Endpoint (GET)*: /oxauth/restv1/userinfo
+** access_token: Acquired via Token or Authorization endpoints.
+
+.Example:
+[source,url]
+GET oxauth/restv1/userinfo?access_token=<TOKEN>
+
+[NOTE]
+.The "sub" parameter
+===============================================
+When using the openid scope, the Authorization Server will always answer with a "sub" parameter that is supposed to identify an End-User with a unique string. This will only be the case for the Authorization Grants mentioned in this Integration Guide. Other flows might collapse all subs into the client_id to avoid unintentionally leaking user information with non-OpenID grants.
+===============================================
+
+
+==== Service-Side Authorization
+Any Service should define which user attributes are required to interact with its services. After that, any received request must contain an access token (obtained using the Authorization/Token Endpoint).
+
+This access token can be included in an internal request to the Authorization Server User Info Endpoint, which returns the set of default attributes that can be checked internally by the service in order to determine if access should be granted.
+
+[#service_authz,reftext='{figure-caption} {counter:figure-num}']
+.Service-Side Authorization example
+image::images/Service_Authorization.PNG[width=500,align="center"]
+
+In this image, the Server does not know if the Client is the one performing the Token Request.
+
+=== Resources for developers
+
+==== Libraries and documentation
+
+In order to develop a Client Application that satisfies the needs specified by OpenID Connect and NextGEOSS UM platform, specifications can be found here:
+
+* OAuth2.0:  https://oauth.net/2/
+* OpenID Connect: http://openid.net/specs/openid-connect-core-1_0.html
+
+All the information provided in the previous sections combined with the specifications of the standards involved in this service can be more easily implemented through available libraries dedicated to each platform and environment:
+
+* https://github.com/IdentityModel/oidc-client-js[Single Page Applications (SPA, usually based on JavaScript)]
+* https://github.com/openid/AppAuth-iOS[Native Apps for iOS and macOS]
+* https://github.com/openid/AppAuth-Android[Native Apps for Android]
+* https://github.com/pingidentity/mod_auth_openidc[Reverse Proxy Solutions]
+* https://marketplace.atlassian.com/plugins/com.miniorange.oauth.jira-oauth/server/overview[Oauth2.0 plugin for JIRA]
+* Web applications:
+**  https://github.com/PhilipGarnero/django-rest-framework-social-oauth2[Django rest framework for OAuth2.0]
+** http://python-social-auth.readthedocs.io/en/latest/[Python social Auth]
+** https://django-oauth-toolkit.readthedocs.io/en/latest/[Django OAuth Toolkit]
+** https://github.com/manfredsteyer/angular-oauth2-oidc[AngularJS]
+
+These libraries contain documentation and samples that implement a basic Client App that can be used for authentication.
