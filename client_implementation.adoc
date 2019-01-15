@@ -1,0 +1,72 @@
+= Implementation on the Client side
+== Registration
+=== Static Registration
+
+In order to allow a client application to delegate its sign-in function under the SSO system of the Authorization Server, it is necessary to provide the following parameters:
+
+* Application Type: An application could be either NATIVE or WEB.
+footnote:[In this case it would be WEB]
+
+
+*	Policy and ToS URI: These resources contain the application policies regarding the usage of user personal information.
+footnote:[Not necessary for the purposes of this demonstration]
+
+*	Redirect Login/Logout URI: Only the first is mandatory. Indicates the URL or App Link where the sign-in service will redirect users after login.
+footnote:[The logic implemented on this webpage should retrieve the token from the URL]
+
+* Required OAuth2 Scopes: These scopes indicate which kind of information and access the Client Application is able to grant to users.
+footnote:[OpenID scope is mandatory (but its use is optional) and geoss_user is default for this system]
+
+After the application has been approved and configured, the following parameters, necessary to connect to the SSO service, will be provided to the client:
+
+*	Client ID: Unique identification sequence for your client.
+*	Client Secret: Necessary to perform Authentication on the Token Endpoint.
+
+Client credentials can be passed either as an Authorization header (encoded as Basic) or in the form of the POST request. Only one of these options can be enabled at the same time for each client.
+
+=== https://raw.githubusercontent.com/hector-rodriguez/um-nextgeoss/master/dynamic_registration.adoc[Dynamic Registration]
+
+[NOTE]
+.Not available
+===============================================
+Dynamic Registration is currently not enabled but will be made available to developers in the future.
+===============================================
+
+== Implementation Solutions for JS Clients
+For web-based clients, there are several Free and Open Source JavaScript solutions available that could implement the implicit flow. In general, all of them perform a call against the Authorization Endpoint:
+
+*	*Authorization Endpoint* (GET): /oxauth/restv1/authorize
+** scope: “openid geoss_user”.
+** response_type: “id_token token”.
+** client_id: Provided by NextGEOSS UM.
+** redirect_uri: <TBD>
+
+.Example:
+[source,url]
+GET /oxauth/restv1/authorize?scope=openid%20geoss_user&client_id=<TBD>&redirect_uri=<TBD>&response_type=id_token%20token
+
+
+== Implementation Solutions for Clients with Back-end
+For back-end powered clients, there are several Free and Open Source solutions available that could implement the authorization code flow. In general, all of them perform a call against the Authorization Endpoint to retrieve a code and then exchange it for a token on the Token Endpoint:
+
+*	*Authorization Endpoint* (GET): /oxauth/restv1/authorize
+** scope: “openid geoss_user”.
+** response_type: “code”.
+** client_id: Provided by NextGEOSS UM.
+** redirect_uri: <TBD>
+
+.Example:
+[source,url]
+GET /oxauth/restv1/authorize?scope=openid%20geoss_user&client_id=<TBD>&redirect_uri=<TBD>&response_type=code
+
+*	*Token Endpoint* (POST): /oxauth/restv1/token
+** scope: “openid geoss_user”.
+** grant_type: authorization_code.
+** code: Obtained on the previous request.
+** client_id: Provided by NextGEOSS UM.
+** client_secret: Provided by NextGEOSS UM
+** redirect_uri: <TBD>
+
+.Example:
+[source,url]
+POST /oxauth/restv1/token -d 'scope=openid%20geoss_user&client_id=<TBD>&client_secret=<TBD>&redirect_uri=<TBD>&grant_type=authorization_code&code=<CODE>
