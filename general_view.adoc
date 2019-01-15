@@ -1,6 +1,6 @@
-=== General view of authentication procedures
+= General view of authentication procedures
 
-==== Authentication Flows
+== Authentication Flows
 In order to interact with this service, it is necessary to implement one of the three authorization flows defined by OpenID Connect 1.0 standard: implicit flow, authorization code flow and hybrid flow.
 
 * Implicit flow. This method is recommended for browser-based apps. Its main steps are:
@@ -27,13 +27,13 @@ To implement any of the flows, it is necessary to specify the response type on t
 .Response Types on OpenID Connect
 image::images/oidc_response_types.PNG[width=300,align="center"]
 
-==== Client authentication
+== Client authentication
 
 When accessing the Token Endpoint, clients using the implicit flow are not required to be authenticated, but if the client uses the Authorization Code Flow, it must provide its credentials.
 
 These credentials will be provided by NextGEOSS UM: client_id and client_secret.
 
-==== Request Endpoints for Authentication
+== Request Endpoints for Authentication
 All endpoints require a set of mandatory parameters in order to generate a valid response. Their URLs can be obtained by means of a Discovery URI that answers back with a set of endpoints and their URLs. All these URLs must be accessed by means of a GET request, and require a set of mandatory parameters:
 
 *	*Discovery URI*: /.well-known/openid-configuration
