@@ -88,7 +88,7 @@ After the application has been approved and configured, the following parameters
 
 Client credentials can be passed either as an Authorization header (encoded as Basic) or in the form of the POST request. Only one of these options can be enabled at the same time for each client.
 
-==== include::dynamic_registration.adoc[]
+==== https://raw.githubusercontent.com/hector-rodriguez/um-nextgeoss/master/dynamic_registration.adoc[Dynamic Registration]
 
 [NOTE]
 .Not available
