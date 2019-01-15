@@ -5,11 +5,8 @@
 In order to allow a client application to delegate its sign-in function under the SSO system of the Authorization Server, it is necessary to provide the following parameters:
 
 * Application Type: An application could be either NATIVE or WEB.
-footnote:[In this case it would be WEB]
-
 
 *	Policy and ToS URI: These resources contain the application policies regarding the usage of user personal information.
-footnote:[Not necessary for the purposes of this demonstration]
 
 *	Redirect Login/Logout URI: Only the first is mandatory. Indicates the URL or App Link where the sign-in service will redirect users after login.
 footnote:[The logic implemented on this webpage should retrieve the token from the URL]
