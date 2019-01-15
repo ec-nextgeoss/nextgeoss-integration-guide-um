@@ -1,0 +1,23 @@
+= Resources for developers
+
+== Libraries and documentation
+
+In order to develop a Client Application that satisfies the needs specified by OpenID Connect and NextGEOSS UM platform, specifications can be found here:
+
+* OAuth2.0:  https://oauth.net/2/
+* OpenID Connect: http://openid.net/specs/openid-connect-core-1_0.html
+
+All the information provided in the previous sections combined with the specifications of the standards involved in this service can be more easily implemented through available libraries dedicated to each platform and environment:
+
+* https://github.com/IdentityModel/oidc-client-js[Single Page Applications (SPA, usually based on JavaScript)]
+* https://github.com/openid/AppAuth-iOS[Native Apps for iOS and macOS]
+* https://github.com/openid/AppAuth-Android[Native Apps for Android]
+* https://github.com/pingidentity/mod_auth_openidc[Reverse Proxy Solutions]
+* https://marketplace.atlassian.com/plugins/com.miniorange.oauth.jira-oauth/server/overview[Oauth2.0 plugin for JIRA]
+* Web applications:
+**  https://github.com/PhilipGarnero/django-rest-framework-social-oauth2[Django rest framework for OAuth2.0]
+** http://python-social-auth.readthedocs.io/en/latest/[Python social Auth]
+** https://django-oauth-toolkit.readthedocs.io/en/latest/[Django OAuth Toolkit]
+** https://github.com/manfredsteyer/angular-oauth2-oidc[AngularJS]
+
+These libraries contain documentation and samples that implement a basic Client App that can be used for authentication.
