@@ -3,8 +3,12 @@
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [General View](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/general_view.adoc)
-    2.1. [Authentication Flows](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/general_view.adoc#authentication-flows)
+    1. [Authentication Flows](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/general_view.adoc#authentication-flows)
+    2. [Client Authentication](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/general_view.adoc#client-authentication)
+    3. [Request Endpoints for Authentication](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/general_view.adoc#request-endpoints-for-authentication)
 3. [Implementation on the Client Side](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/client_implementation.adoc)
+    1. [Registration](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/client_implementation.adoc#registration)
+    2. [Implementation Solutions](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/client_implementation.adoc#implementation-solutions-for-js-clients)
 4. [Implementation on the Service Side](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/service_implementation.adoc)
 5. [Resources for Developers](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/dev_resources.adoc)
 
