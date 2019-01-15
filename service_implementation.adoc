@@ -1,4 +1,5 @@
 = Implementation on the Service Side
+
 == Token Validation and End-user Authorization
 
 Use this Endpoint to acquire user information:
