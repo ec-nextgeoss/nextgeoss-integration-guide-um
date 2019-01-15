@@ -1,5 +1,14 @@
-# Introduction
-## NextGEOSS User Management Integration Guide for application developers
+# NextGEOSS User Management Integration Guide for application developers
+
+## Table of Contents
+1. [Introduction](#introduction)
+2. [General View](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/general_view.adoc)
+3. [Implementation on the Client Side](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/client_implementation.adoc)
+4. [Implementation on the Service Side](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/service_implementation.adoc)
+2. [Resources for Developers](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/dev_resources.adoc)
+
+
+## Introduction <a name="introduction"></a>
 
 The NextGEOSS User Management (UM) Service provides users with Single-Sign-On (SSO) authentication for accessing GEOSS data and services in a federated environment. In summary, the GEOSS UM Service demonstrates the following functionalities:
 
@@ -13,6 +22,3 @@ The NextGEOSS User Management (UM) Service provides users with Single-Sign-On (S
 The NextGEOSS UM Service is based on OpenID Connect (OIDC) for authentication and UMA for the single-point authorization management allowing integration of social network login (Google, Twitter, Facebook, ...) and other SSO systems to provide a federation (ESA, NASA). Those SSO systems could be based on different protocols: OpenID Connect, SAML2 and OAuth2 integrated through proxies.
 
 This version of the user guide is focusing on the processes to register and integrate NextGEOSS client services or applications (i.e. data harvesting, discovery, access and processing), and leverages the authentication based on OIDC protocol, and the authorization mechanisms based on OIDC scopes or UMA protocol.
-
-
-## Content Guide
