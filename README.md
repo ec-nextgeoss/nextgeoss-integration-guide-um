@@ -3,9 +3,10 @@
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [General View](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/general_view.adoc)
+    2.1. [Authentication Flows](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/general_view.adoc#authentication-flows)
 3. [Implementation on the Client Side](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/client_implementation.adoc)
 4. [Implementation on the Service Side](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/service_implementation.adoc)
-2. [Resources for Developers](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/dev_resources.adoc)
+5. [Resources for Developers](https://github.com/hector-rodriguez/um-nextgeoss/blob/master/dev_resources.adoc)
 
 
 ## Introduction <a name="introduction"></a>
