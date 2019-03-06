@@ -2,7 +2,7 @@
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [General View](https://github.com/ec-nextgeoss/nextgeoss-integration-guide-ums/blob/master/general_view.adoc)
+2. [General View](https://github.com/ec-nextgeoss/nextgeoss-integration-guide-um/blob/master/general_view.adoc)
     1. [Authentication Flows](https://github.com/ec-nextgeoss/nextgeoss-integration-guide-um/blob/master/general_view.adoc#authentication-flows)
     2. [Client Authentication](https://github.com/ec-nextgeoss/nextgeoss-integration-guide-um/blob/master/general_view.adoc#client-authentication)
     3. [Request Endpoints for Authentication](https://github.com/ec-nextgeoss/nextgeoss-integration-guide-um/blob/master/general_view.adoc#request-endpoints-for-authentication)
