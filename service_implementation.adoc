@@ -46,8 +46,4 @@ All this information can be used to provide claims about users interacting with 
 
 === UMA Authorization
 
-[NOTE]
-.Not available
-===============================================
-UMA Authorization is currently not enabled but will be made available to developers in the future.
-===============================================
+NextGEOSS offers a PEP deliverable acting as a gateway. This deliverable provides proxying functionality and handles all UMA concerns, leaving Service-Side implementation out of the scope. 
