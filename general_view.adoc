@@ -1,4 +1,4 @@
-= General view of authentication procedures
+= Authentication procedures
 
 == Authentication Flows
 In order to interact with this service, it is necessary to implement one of the three authorization flows defined by OpenID Connect 1.0 standard: implicit flow, authorization code flow and hybrid flow.
@@ -60,3 +60,47 @@ If the application is trying to authenticate without user input, user credential
 ** scope: The request should include an array of scopes, with one of them being “openid”.
 ** client_id*: Provided by NextGEOSS UM, only necessary with grant_type=authorization_code.
 ** client_secret*: Provided by NextGEOSS UM, only necessary with grant_type=authorization_code
+
+= Authorization procedures
+
+== Authentication
+
+When performing an access request, there might be a requirement to authenticate prior to the execution of the Resource Access Flow. This authentication will ensure that the Authorization Server is aware of all relevant End-User claims that may be necessary to grant or deny access to a resource.
+
+The authentication flows explained on prior sections of this guide serve as a guideline for this step. It is important to note that any given client that aims at performing a UMA based access request should locally store the identity token (id_token field) generated during authentication.
+
+== "Naive" Access Request
+
+As an initial step to the Access Request, the Client Application must access the UMA-protected Resource Server in a non-secured manner. If the service is correctly protected with UMA, the response will be a 401 Unauthorized HTTP response with a Response Header presenting the following structure:
+
+WWW-Authenticate: UMA realm="nextgeoss",as_uri="https://um.nextgeoss.eu",ticket="016f84e8-f9b9-11e0-bd6f-0021cc6004de"
+
+The client must store the value assigned to the ticket field, which references the resource being accessed.
+
+
+== Generation of a Resource Access Token (RPT)
+
+When acquiring a resource token, the UMA service will try to check user claims (such as attributes, user ID, client ID). Some of those claims can’t be gathered using the service itself and the parameters on the request, so it might be necessary to gather those claims and get a new ticket. If an id_token has previosuly being issued, it can be passed as part of the request to inform the NextGEOSS UM Platform of the End-User claims relevant for authorization.
+
+*	*Token Endpoint* (POST): /oxauth/restv1/token
+** scope=<scopes> (separated by a space)
+** client_secret=<secret>
+** ticket=<ticket>
+** client_id=<client_id>
+** grant_type=urn:ietf:params:oauth:grant-type:uma-ticket
+** claim_token=<id_token>
+** claim_token_format=http%3A%2F%2Fopenid.net%2Fspecs%2Fopenid-connect-core-1_0.html%23IDToken
+
+If the ticket is valid, a Resource Token a JSON response with the field “access_token” will be issued. If not, a 403 (Forbidden) response will be issued. This response can have another JSON attached explaining the error. If the error matches the “need_info” string, it is possible to extract an URL from the field “redirect_user” to gather claims.
+
+* GET  <redirect_user_URI>?ticket=<ticket>&client_id=<client_id>&claims_redirect_uri=<redirect_uri>
+
+The redirect_uri in this request must be specified on the client configuration. This request will result will redirect the user to another location with the response parameters parsed in the URL. One of this parameters should be a new “ticket” that can be used to request the token again, taking into account the gathered claims.
+
+In any case, with or without claims, the token endpoint can issue a 403 Forbidden response indicating that the policies in place forbid access to the resource.
+
+== Access Request with a Resource Access Token (RPT)
+
+Once the RPT ("access_token") has been issued, the Client can perform the request on step 1 of this procedure adding the RPT in an Authorization header. The result of this request can either be a nominal answer by the Resource Server or, if the RPT is invalid or it has expired, a 401 Unauthorized response with a ticket. In that case the Client can choose to start the process from the first step.
+
+* Authorization: Bearer <access_token>
